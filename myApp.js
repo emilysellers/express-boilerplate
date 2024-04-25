@@ -20,9 +20,18 @@ app.get(
   },
   (req, res) => res.json({ time: req.time })
 );
+
+// build an API endpoint mounted at `GET /name`
+app.route("/name").get((req, res) => {
+  // Respond with a JSON document, taking the structure { name: 'firstname lastname'}. The first and last name parameters should be encoded in a query string e.g. ?first=firstname&last=lastname
+  let firstName = req.query.first;
+  let lastName = req.query.last;
+  res.json({ name: `${firstName} ${lastName}` });
+});
+
 const carrots = {
   snack: "carrots 🥕",
-  profile: "crunchy",
+  profile: ["crunchy", "sweet", "good for your eyes"],
   amount: 7,
   success: "YES",
 };
@@ -31,6 +40,7 @@ app.get("/carrots", (req, res) => {
   //   console.log(res.headers);
   res.json(carrots);
 });
+
 // build an echo server
 app.get("/:word/echo", (req, res) => {
   const word = req.params.word;
