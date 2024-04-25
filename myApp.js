@@ -1,4 +1,5 @@
 require("dotenv").config();
+const bodyParser = require("body-parser");
 let express = require("express");
 let app = express();
 
@@ -7,6 +8,7 @@ app.use(function middleWare(req, res, next) {
   next();
 });
 app.use("/public", express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => res.sendFile(__dirname + "/views/index.html"));
 // app.get("/", (req, res) => res.send("Hello Express"));
@@ -22,12 +24,20 @@ app.get(
 );
 
 // build an API endpoint mounted at `GET /name`
-app.route("/name").get((req, res) => {
-  // Respond with a JSON document, taking the structure { name: 'firstname lastname'}. The first and last name parameters should be encoded in a query string e.g. ?first=firstname&last=lastname
-  let firstName = req.query.first;
-  let lastName = req.query.last;
-  res.json({ name: `${firstName} ${lastName}` });
-});
+app
+  .route("/name")
+  .get((req, res) => {
+    // Respond with a JSON document, taking the structure { name: 'firstname lastname'}. The first and last name parameters should be encoded in a query string e.g. ?first=firstname&last=lastname
+    let firstName = req.query.first;
+    let lastName = req.query.last;
+    res.json({ name: `${firstName} ${lastName}` });
+  })
+  // mount POST handler using params in object `req.body`
+  .post((req, res) => {
+    let firstName = req.body.first;
+    let lastName = req.body.last;
+    res.json({ name: `${firstName} ${lastName}` });
+  });
 
 const carrots = {
   snack: "carrots 🥕",
